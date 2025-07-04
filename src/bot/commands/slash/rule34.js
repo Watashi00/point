@@ -12,6 +12,10 @@ module.exports = {
     ),
 
   async execute(interaction) {
+    if (!interaction.guild) {
+      return interaction.reply({ content: '❌ Este comando só pode ser usado em servidores.', ephemeral: true });
+    }
+
     const query = interaction.options.getString('termo').replace(/\s+/g, '_');
 
     try {
@@ -33,7 +37,10 @@ module.exports = {
 
     } catch (err) {
       console.error(err);
-      await interaction.reply('❌ Erro ao buscar imagem. Tente novamente mais tarde.');
+      // Só tenta responder se ainda não respondeu
+      if (!interaction.replied && !interaction.deferred) {
+        await interaction.reply('❌ Erro ao buscar imagem. Tente novamente mais tarde.');
+      }
     }
   }
 };
