@@ -23,24 +23,31 @@ module.exports = {
       const posts = res.data;
 
       if (!posts || posts.length === 0) {
-        return interaction.reply('⚠️ Nenhuma imagem encontrada para esse termo.');
+      return interaction.reply('⚠️ Nenhuma imagem encontrada para esse termo.');
       }
 
       const post = posts[Math.floor(Math.random() * posts.length)];
       const imageUrl = post.file_url;
 
-      // Envia a imagem e adiciona as reações
-      const message = await interaction.reply({ content: imageUrl, fetchReply: true });
+      const embed = {
+      title: `Resultado para: ${query.replace(/_/g, ' ')}`,
+      image: { url: imageUrl },
+      url: imageUrl,
+      color: 0x0099ff,
+      footer: { text: '❤️ = Smash | 💔 = Pass' }
+      };
+
+      // Envia o embed e adiciona as reações
+      const message = await interaction.reply({ embeds: [embed], fetchReply: true });
 
       await message.react('❤️');  // smash
       await message.react('💔');  // pass
 
     } catch (err) {
       console.error(err);
-      // Só tenta responder se ainda não respondeu
       if (!interaction.replied && !interaction.deferred) {
-        await interaction.reply('❌ Erro ao buscar imagem. Tente novamente mais tarde.');
+      await interaction.reply('❌ Erro ao buscar imagem. Tente novamente mais tarde.');
       }
     }
+    }
   }
-};
