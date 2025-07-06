@@ -23,22 +23,25 @@ module.exports = {
       const posts = res.data;
 
       if (!posts || posts.length === 0) {
-      return interaction.reply('⚠️ Nenhuma imagem encontrada para esse termo.');
+        return interaction.reply('⚠️ Nenhuma imagem encontrada para esse termo.');
       }
 
       const post = posts[Math.floor(Math.random() * posts.length)];
       const imageUrl = post.file_url;
 
       const embed = {
-      title: `Resultado para: ${query.replace(/_/g, ' ')}`,
-      image: { url: imageUrl },
-      url: imageUrl,
-      color: 0x0099ff,
-      footer: { text: '❤️ = Smash | 💔 = Pass' }
+        title: `Resultado para: ${query.replace(/_/g, ' ')}`,
+        image: { url: imageUrl },
+        url: imageUrl,
+        color: 0x0099ff,
+        footer: { text: '❤️ = Smash | 💔 = Pass' }
       };
 
-      // Envia o embed e adiciona as reações
-      const message = await interaction.reply({ embeds: [embed], fetchReply: true });
+      // Menciona o cargo fora da embed
+      const roleMention = '<@&1390702238179131492>';
+
+      // Envia a menção e o embed
+      const message = await interaction.reply({ content: roleMention, embeds: [embed], fetchReply: true });
 
       await message.react('❤️');  // smash
       await message.react('💔');  // pass
@@ -46,8 +49,8 @@ module.exports = {
     } catch (err) {
       console.error(err);
       if (!interaction.replied && !interaction.deferred) {
-      await interaction.reply('❌ Erro ao buscar imagem. Tente novamente mais tarde.');
+        await interaction.reply('❌ Erro ao buscar imagem. Tente novamente mais tarde.');
       }
     }
-    }
   }
+}
